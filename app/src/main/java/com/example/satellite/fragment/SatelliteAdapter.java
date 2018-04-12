@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.satellite.R;
 import com.example.satellite.gson.Satellite;
@@ -20,8 +21,10 @@ public class SatelliteAdapter extends RecyclerView.Adapter<SatelliteAdapter.View
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameText;
         TextView idText;
+        View itemView;
         public ViewHolder (View view) {
             super(view);
+            itemView = view;
             nameText = (TextView) view.findViewById(R.id.satellite_name);
             idText = (TextView) view.findViewById(R.id.satellite_id);
         }
@@ -33,7 +36,16 @@ public class SatelliteAdapter extends RecyclerView.Adapter<SatelliteAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.satellite_item, parent, false);
-        ViewHolder holder = new ViewHolder(view);
+        final ViewHolder holder = new ViewHolder(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Satellite satellite = mSatelliteList.get(position);
+                //测试时显示url，发布版开启活动或碎片播放视频流
+                Toast.makeText(v.getContext(), satellite.getName() + "的播放地址为：" + satellite.getUrl(), Toast.LENGTH_SHORT).show();
+            }
+        });
         return holder;
     }
 
