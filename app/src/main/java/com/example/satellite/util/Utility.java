@@ -10,8 +10,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,30 +22,31 @@ import java.util.List;
  */
 
 public class Utility {
-    public static ArrayList<Satellite> handleSatelliteResponse (String response) {
+    public static boolean handleSatelliteResponse (String response) {
         if ( !TextUtils.isEmpty(response)) {
             try {
-                ArrayList<Satellite> satelliteList = new ArrayList<>();
+
                 JSONArray allSatellite = new JSONArray(response);
                 for ( int i = 0; i < allSatellite.length(); i++) {
                     JSONObject satelliteObject = allSatellite.getJSONObject(i);
                     Satellite satellite = new Satellite();
-                    satellite.setId(satelliteObject.getInt("id"));
+                    satellite.setSatelliteId(satelliteObject.getInt("id"));
                     satellite.setName(satelliteObject.getString("name"));
                     satellite.setUrl(satelliteObject.getString("url"));
-                    satelliteList.add(satellite);
+
+                    satellite.save();
 
                 }
 
-                return satelliteList;
-            }catch (Exception e) {
+                return true;
+            }catch (JSONException e) {
                 //提示解析失败
                 e.printStackTrace();
             }
 
         }
 
-        return null;
+        return false;
 
     }
 }

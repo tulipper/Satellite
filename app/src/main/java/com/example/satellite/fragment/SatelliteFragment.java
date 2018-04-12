@@ -17,6 +17,8 @@ import com.example.satellite.gson.Satellite;
 import com.example.satellite.util.HttpUtil;
 import com.example.satellite.util.Utility;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,8 @@ import okhttp3.Response;
 
 public class SatelliteFragment extends Fragment {
     RecyclerView satelliteRecyclerView;
-    private  List<Satellite> satelliteList = new ArrayList<>();
+    private SatelliteAdapter adapter;
+    private  List<Satellite> dataList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -41,9 +44,10 @@ public class SatelliteFragment extends Fragment {
         satelliteRecyclerView = (RecyclerView) view.findViewById(R.id.current_satellites);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         satelliteRecyclerView.setLayoutManager(layoutManager);
+        adapter = new SatelliteAdapter(dataList);
+        querySatellite();
+        //initSatelliteList();
 
-        initSatelliteList();
-        SatelliteAdapter adapter = new SatelliteAdapter(satelliteList);
         satelliteRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         return view;
@@ -60,13 +64,49 @@ public class SatelliteFragment extends Fragment {
             satellite.setId(1234565);
             satellite.setUrl("ccccc");
             satellite.setName("wwwww");
-            satelliteList.add(satellite);
+            dataList.add(satellite);
             satellite = new Satellite();
             satellite.setId(862489);
             satellite.setUrl("csdsc");
             satellite.setName("wcbazw");
-            satelliteList.add(satellite);
+            dataList.add(satellite);
         }
+    }
+    private void querySatellite() {
+        dataList.addAll( DataSupport.findAll(Satellite.class));
+        if (dataList.size() > 0) {
+
+            adapter.notifyDataSetChanged();
+        } else {
+            queryFromServer (MainActivity.defaultHttpAddress + "/currentSatellite.json");
+        }
+    }
+    private void queryFromServer (String address) {
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "请求服务器失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                boolean result = Utility.handleSatelliteResponse(responseText);
+                if (result) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            querySatellite();
+                        }
+                    });
+                }
+            }
+        });
     }
 
 }

@@ -41,7 +41,7 @@ public class SatelliteAdapter extends RecyclerView.Adapter<SatelliteAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         Satellite satellite = mSatelliteList.get(position);
         holder.nameText.setText("卫星名字：" + satellite.getName());
-        holder.idText.setText("卫星id:" + satellite.getId());
+        holder.idText.setText("卫星id:" + satellite.getSatelliteId());
     }
 
     @Override
