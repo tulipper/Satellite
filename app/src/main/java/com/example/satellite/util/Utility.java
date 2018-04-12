@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Utility {
     public static boolean handleSatelliteResponse (String response) {
         if ( !TextUtils.isEmpty(response)) {
             try {
-
+                DataSupport.deleteAll(Satellite.class);
                 JSONArray allSatellite = new JSONArray(response);
                 for ( int i = 0; i < allSatellite.length(); i++) {
                     JSONObject satelliteObject = allSatellite.getJSONObject(i);
