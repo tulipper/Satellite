@@ -9,11 +9,12 @@
     <LinearLayout
         android:id="@+id/panel_up"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
         android:background="@color/player_panel_bg">
         <ImageView
+            android:id="@+id/back_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_arrow_back_white_36dp"
