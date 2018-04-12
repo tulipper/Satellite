@@ -10,8 +10,10 @@ import android.widget.Button;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.example.satellite.fragment.MapFragment;
+import com.example.satellite.fragment.SatelliteFragment;
 
 public class MainActivity extends AppCompatActivity {
+    public static String defaultHttpAddress = "http://192.168.1.103";
     Button satelliteButton;
     Button mapButton;
     Button goalButton;
@@ -29,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 replaceFragment(new MapFragment());
+            }
+        });
+        satelliteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new SatelliteFragment());
             }
         });
 

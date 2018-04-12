@@ -91,15 +91,15 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mapView.onDestroy();
+
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mLocationClient.stop();
         mapView.onDestroy();
         baiduMap.setMyLocationEnabled(false);
+        super.onDestroy();
     }
 
     @Override
