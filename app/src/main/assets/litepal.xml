@@ -1,0 +1,7 @@
+<litepal>
+    <dbname value="satellites"/>
+    <version value="1"/>
+    <list>
+        <mapping class="com.example.satellite.gson.Satellite"/>
+    </list>
+</litepal>
