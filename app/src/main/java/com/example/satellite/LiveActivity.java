@@ -2,6 +2,7 @@ package com.example.satellite;
 
 import android.content.DialogInterface;
 
+import android.media.Image;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +33,12 @@ public class LiveActivity extends AppCompatActivity {
     private VideoView liveVideo;
     private RelativeLayout loadingLayout;
     private String liveUrl;
+    private RelativeLayout rootLayout;
+    private LinearLayout topPanel;
+    private LinearLayout bottomPanel;
+    private ImageView playImage;
     private static final int RETRY_TIMES = 5;
+    private static final int AUTO_HIDE_TIME = 5000;//ms
     private int counter = 0;
 
     /**
@@ -52,6 +59,27 @@ public class LiveActivity extends AppCompatActivity {
 
     private void initPlayer() {
         Vitamio.isInitialized(getApplicationContext());
+        playImage = (ImageView) findViewById(R.id.playImage);
+        playImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (liveVideo.isPlaying()) {
+                    liveVideo.stopPlayback();
+                    playImage.setImageResource(R.drawable.ic_play_arrow_white_36dp);
+                } else {
+                    playImage.setImageResource(R.drawable.ic_pause_circle_outline_white_36dp);
+                    liveVideo.setVideoURI(Uri.parse(liveUrl));
+                    /*
+                    liveVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            liveVideo.start();
+                        }
+                    });
+                    */
+                }
+            }
+        });
         liveVideo = (VideoView) findViewById(R.id.video_view);
         liveVideo.setVideoURI(Uri.parse(liveUrl));
         liveVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -112,6 +140,32 @@ public class LiveActivity extends AppCompatActivity {
         titleText.setText(getIntent().getStringExtra("name"));
         timeText = (TextView) findViewById(R.id.panel_system_time);
         loadingLayout = (RelativeLayout) findViewById(R.id.loading_layout);
+        rootLayout = (RelativeLayout) findViewById(R.id.activity_live);
+        topPanel = (LinearLayout) findViewById(R.id.panel_up);
+        bottomPanel = (LinearLayout) findViewById(R.id.panel_bottom);
+        rootLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (topPanel.getVisibility() == View.VISIBLE || bottomPanel.getVisibility() == View.VISIBLE) {
+                    topPanel.setVisibility(View.GONE);
+                    bottomPanel.setVisibility(View.GONE);
+                    return;
+                }
+                if (liveVideo.isPlaying())
+                    playImage.setImageResource(R.drawable.ic_pause_circle_outline_white_36dp);
+                else
+                    playImage.setImageResource(R.drawable.ic_play_arrow_white_36dp);
+                topPanel.setVisibility(View.VISIBLE);
+                bottomPanel.setVisibility(View.VISIBLE);
+                 handler.postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                         topPanel.setVisibility(View.GONE);
+                         bottomPanel.setVisibility(View.GONE);
+                     }
+                 }, AUTO_HIDE_TIME);
+            }
+        });
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,6 +191,12 @@ public class LiveActivity extends AppCompatActivity {
 
     }
 
-
-
+    @Override
+    protected void onStop() {
+        if (liveVideo != null) {
+            liveVideo.stopPlayback();
+        }
+        counter = 0;
+        super.onStop();
+    }
 }

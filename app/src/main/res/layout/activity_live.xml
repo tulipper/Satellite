@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_live"
     android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         android:layout_height="match_parent" />
     <!--顶部panel-->
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/panel_up"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -47,6 +49,7 @@
     </LinearLayout>
     <!--底部panel-->
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/panel_bottom"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -54,6 +57,7 @@
         android:orientation="horizontal"
         android:background="@color/player_panel_bg">
     <ImageView
+        android:id="@+id/playImage"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/ic_play_arrow_white_36dp"
