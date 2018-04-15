@@ -37,7 +37,10 @@
             android:enabled="true"
             android:process=":remote"></service>
 
-        <activity android:name=".LiveActivity"></activity>
+        <activity android:name=".LiveActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
     </application>
 
 </manifest>

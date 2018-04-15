@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.satellite.LiveActivity">
+    <io.vov.vitamio.widget.VideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <!--顶部panel-->
     <LinearLayout
         android:id="@+id/panel_up"
