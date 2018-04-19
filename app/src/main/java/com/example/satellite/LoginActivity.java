@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
@@ -27,10 +28,18 @@ public class LoginActivity extends BaseActivity {
     private Button loginButton;
     private ProgressBar progressBar;
     private TextView gotoSignup;
+    private MyUser currentUser;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bmob.initialize(this,"7932ba029f47be06be4a9ad39b356437");
+        currentUser = BmobUser.getCurrentUser(MyUser.class);
+        if (currentUser != null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            finish();
+            startActivity(intent);
+
+        }
         setContentView(R.layout.activity_login);
         initView();
     }

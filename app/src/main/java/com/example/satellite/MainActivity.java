@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.baidu.mapapi.SDKInitializer;
 import com.example.satellite.fragment.MapFragment;
 import com.example.satellite.fragment.SatelliteFragment;
+import com.example.satellite.fragment.UserFragment;
 
 import cn.bmob.v3.Bmob;
 
@@ -39,6 +40,12 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 replaceFragment(new SatelliteFragment());
+            }
+        });
+        userButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new UserFragment());
             }
         });
 
