@@ -25,7 +25,7 @@ import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.widget.VideoView;
 
-public class LiveActivity extends AppCompatActivity {
+public class LiveActivity extends BaseActivity {
     private ImageView backImage;
     private TextView titleText;
     private TextView timeText;
@@ -82,6 +82,7 @@ public class LiveActivity extends AppCompatActivity {
         });
         liveVideo = (VideoView) findViewById(R.id.video_view);
         liveVideo.setVideoURI(Uri.parse(liveUrl));
+        //liveVideo.setVideoQuality(MediaPlayer.VIDEOQUALITY_LOW);
         liveVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {

@@ -12,8 +12,10 @@ import com.baidu.mapapi.SDKInitializer;
 import com.example.satellite.fragment.MapFragment;
 import com.example.satellite.fragment.SatelliteFragment;
 
-public class MainActivity extends AppCompatActivity {
-    public static String defaultHttpAddress = "http://192.168.1.103";
+import cn.bmob.v3.Bmob;
+
+public class MainActivity extends BaseActivity {
+    public static String defaultHttpAddress = "http://192.168.1.115";
     Button satelliteButton;
     Button mapButton;
     Button goalButton;
