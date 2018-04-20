@@ -1,5 +1,6 @@
 package com.example.satellite;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ public class MainActivity extends BaseActivity {
     Button mapButton;
     Button goalButton;
     Button userButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +52,29 @@ public class MainActivity extends BaseActivity {
         });
 
     }
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frag_container, fragment);
         transaction.commit();
     }
+    public void replaceFragmentToStack(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frag_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    public void finishFragment (Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.remove(fragment);
+        transaction.commit();
+    }
     private void initMap() {
         SDKInitializer.initialize(getApplicationContext());
+    }
+    private void initButtonBackground() {
+
     }
 }
