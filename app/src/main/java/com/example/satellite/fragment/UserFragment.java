@@ -37,6 +37,7 @@ public class UserFragment extends Fragment {
     private ImageView picImageView;
     private RelativeLayout nickNameItem;
     private RelativeLayout emailItem;
+    private RelativeLayout phoneItem;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class UserFragment extends Fragment {
         picImageView = (ImageView)view.findViewById(R.id.user_pic);
         nickNameItem = (RelativeLayout) view.findViewById(R.id.nick_name_item);
         emailItem = (RelativeLayout) view.findViewById(R.id.email_item);
+        phoneItem = (RelativeLayout) view.findViewById(R.id.phone_item);
         return view;
     }
 
@@ -86,6 +88,16 @@ public class UserFragment extends Fragment {
                     return;
                 }
                 replaceFragmentToStack(new ModifyEmailFragment());
+            }
+        });
+        phoneItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    Toast.makeText(getContext(), "当前未登录，请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                replaceFragmentToStack(new VerifyPhoneFragment());
             }
         });
     }
