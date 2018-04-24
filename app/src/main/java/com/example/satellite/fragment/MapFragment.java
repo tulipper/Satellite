@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -44,6 +45,9 @@ public class MapFragment extends Fragment {
     public LocationClient mLocationClient;
     private TextView locationText;
     private MapView mapView;
+    private FloatingActionButton fab;
+    private double latitude;
+    private double longitude;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -65,6 +69,24 @@ public class MapFragment extends Fragment {
         } else {
             requestLocation();
         }
+        baiduMap.setMyLocationEnabled(true);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //移动到我的位置
+                LatLng ll = new LatLng(latitude, longitude);
+                MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
+                baiduMap.animateMapStatus(update);
+                //update = MapStatusUpdateFactory.zoomTo(16f);
+                //baiduMap.animateMapStatus(update);
+                //让我显示在地图上
+                MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
+                locationBuilder.latitude(latitude);
+                locationBuilder.longitude(longitude);
+                MyLocationData locationData = locationBuilder.build();
+                baiduMap.setMyLocationData(locationData);
+            }
+        });
     }
     private void requestLocation() {
         initLocation();
@@ -131,6 +153,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.mapfragment, container, false);
         locationText = (TextView) view.findViewById(R.id.location_text);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
         mapView = (MapView) view.findViewById(R.id.map_view);
         baiduMap = mapView.getMap();
 
@@ -140,12 +163,18 @@ public class MapFragment extends Fragment {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             if (bdLocation.getLocType() == BDLocation.TypeGpsLocation ||
-                bdLocation.getLocType() == BDLocation.TypeNetWorkLocation);
+                bdLocation.getLocType() == BDLocation.TypeNetWorkLocation) {
+                fab.setVisibility(View.VISIBLE);
+                latitude = bdLocation.getLatitude();
+                longitude = bdLocation.getLongitude();
+                StringBuilder currentPosition = new StringBuilder();
+                currentPosition.append("纬度：").append(bdLocation.getLatitude()).append("；\n");
+                currentPosition.append("经度：").append(bdLocation.getLongitude()).append("；");
+                locationText.setText(currentPosition.toString());
+            } else {
+                //fab.setVisibility(View.GONE);
+            }
 
-            StringBuilder currentPosition = new StringBuilder();
-            currentPosition.append("纬度：").append(bdLocation.getLatitude()).append("；\n");
-            currentPosition.append("经度：").append(bdLocation.getLongitude()).append("；");
-            locationText.setText(currentPosition.toString());
         }
     }
 

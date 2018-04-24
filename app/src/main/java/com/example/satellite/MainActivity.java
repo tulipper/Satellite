@@ -50,6 +50,12 @@ public class MainActivity extends BaseActivity {
                 replaceFragment(new UserFragment());
             }
         });
+        goalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new GoalFragment());
+            }
+        });
 
     }
     public void replaceFragment(Fragment fragment) {
