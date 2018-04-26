@@ -1,20 +1,19 @@
 package com.example.satellite;
 
-import android.graphics.drawable.Drawable;
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.example.satellite.fragment.MapFragment;
 import com.example.satellite.fragment.SatelliteFragment;
 import com.example.satellite.fragment.UserFragment;
-
-import cn.bmob.v3.Bmob;
 
 public class MainActivity extends BaseActivity {
     public static String defaultHttpAddress = "http://192.168.1.115";
@@ -22,6 +21,11 @@ public class MainActivity extends BaseActivity {
     Button mapButton;
     Button goalButton;
     Button userButton;
+    private Fragment currentFragment;
+    private GoalFragment goalFragment;
+    private SatelliteFragment satelliteFragment;
+    private MapFragment mapFragment;
+    private UserFragment userFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,56 +36,86 @@ public class MainActivity extends BaseActivity {
         mapButton = (Button) findViewById(R.id.map);
         goalButton = (Button) findViewById(R.id.goal);
         userButton = (Button) findViewById(R.id.user);
+        goalFragment = new GoalFragment();
+        satelliteFragment = new SatelliteFragment();
+        mapFragment = new MapFragment();
+        userFragment = new UserFragment();
+        currentFragment = satelliteFragment;
+        initShow();
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new MapFragment());
+                initButtonBackground();
+                mapButton.setBackgroundResource(R.drawable.ic_map_black_36dp);
+                switchFragment(mapFragment);
             }
         });
         satelliteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new SatelliteFragment());
+                initButtonBackground();
+                satelliteButton.setBackgroundResource(R.drawable.ic_flight_black_36dp);
+                switchFragment(satelliteFragment);
             }
         });
         userButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new UserFragment());
+                initButtonBackground();
+                userButton.setBackgroundResource(R.drawable.ic_account_box_black_36dp);
+                switchFragment(userFragment);
             }
         });
         goalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new GoalFragment());
+                initButtonBackground();
+                goalButton.setBackgroundResource(R.drawable.ic_my_location_black_36dp);
+                switchFragment(goalFragment);
             }
         });
 
     }
-    public void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frag_container, fragment);
-        transaction.commit();
+
+
+    private void switchFragment(Fragment targetFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+        if (!targetFragment.isAdded()) {
+            transaction
+                    .hide(currentFragment)
+                    .add(R.id.frag_container, targetFragment)
+                    .commit();
+            Toast.makeText(this, "还没有添加过", Toast.LENGTH_SHORT).show();
+        } else {
+            transaction
+                    .hide(currentFragment)
+                    .show(targetFragment)
+                    .commit();
+            //System.out.println("添加了( ⊙o⊙ )哇");
+            Toast.makeText(this, "添加过了", Toast.LENGTH_SHORT).show();
+        }
+        currentFragment = targetFragment;
     }
-    public void replaceFragmentToStack(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frag_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void initShow() {
+        initButtonBackground();
+        satelliteButton.setBackgroundResource(R.drawable.ic_flight_black_36dp);
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction();
+        transaction
+                .add(R.id.frag_container, currentFragment)
+                .commit();
     }
-    public void finishFragment (Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.remove(fragment);
-        transaction.commit();
-    }
+
+
     private void initMap() {
         SDKInitializer.initialize(getApplicationContext());
     }
     private void initButtonBackground() {
-
+        satelliteButton.setBackgroundResource(R.drawable.ic_flight_white_36dp);
+        mapButton.setBackgroundResource(R.drawable.ic_map_white_36dp);
+        goalButton.setBackgroundResource(R.drawable.ic_my_location_white_36dp);
+        userButton.setBackgroundResource(R.drawable.ic_account_box_white_36dp);
     }
 
 }

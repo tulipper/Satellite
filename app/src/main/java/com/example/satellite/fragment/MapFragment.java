@@ -17,24 +17,23 @@ import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
+
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
+
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.example.satellite.MainActivity;
+
 import com.example.satellite.R;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+
 import java.util.List;
-import java.util.ListIterator;
+
 
 /**
  * Created by Administrator on 2018/4/10.
@@ -77,8 +76,6 @@ public class MapFragment extends Fragment {
                 LatLng ll = new LatLng(latitude, longitude);
                 MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
                 baiduMap.animateMapStatus(update);
-                //update = MapStatusUpdateFactory.zoomTo(16f);
-                //baiduMap.animateMapStatus(update);
                 //让我显示在地图上
                 MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
                 locationBuilder.latitude(latitude);
