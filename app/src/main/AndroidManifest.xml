@@ -29,7 +29,9 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="N5gM4mrEKDAvL0kHSvy6My0i0uacaXHK" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.baidu.location.f"
@@ -48,7 +50,8 @@
         </activity>
         <activity
             android:name=".SignupActivity"
-            android:label="@string/title_activity_signup"></activity>
+            android:label="@string/title_activity_signup" />
+        <activity android:name=".PicActivity"></activity>
     </application>
 
 </manifest>

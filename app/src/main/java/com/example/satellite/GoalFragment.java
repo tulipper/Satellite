@@ -84,6 +84,21 @@ public class GoalFragment extends Fragment {
                 }
             }
         });
+        seePicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (message != null) {
+                    String url = message.getPicAddr();
+                    String city = message.getLocation();
+                    int maxLeval = 9;
+                    Intent intent  = new Intent (getActivity(), PicActivity.class);
+                    intent.putExtra("url", url);
+                    intent.putExtra("city", city);
+                    intent.putExtra("max_leval",9);
+                    startActivity(intent);
+                }
+            }
+        });
         admitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
