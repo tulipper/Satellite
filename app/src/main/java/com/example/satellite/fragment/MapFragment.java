@@ -22,6 +22,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -68,6 +69,7 @@ public class MapFragment extends Fragment {
         } else {
             requestLocation();
         }
+
         baiduMap.setMyLocationEnabled(true);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.view.LayoutInflater;;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -70,6 +70,7 @@ public class GoalFragment extends Fragment {
         seePicButton = (Button) view.findViewById(R.id.see_pic);
         seeVideoButton = (Button) view.findViewById(R.id.see_video);
         seeVideoButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (message != null) {
