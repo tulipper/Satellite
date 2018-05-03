@@ -22,13 +22,19 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.GroundOverlayOptions;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
+import com.baidu.mapapi.model.LatLngBounds;
 import com.example.satellite.R;
 
 import java.util.ArrayList;
@@ -48,10 +54,18 @@ public class MapFragment extends Fragment {
     private FloatingActionButton fab;
     private double latitude;
     private double longitude;
+    private View view;
+    private int markerCounter = 0;
+    private List<LatLng> markerList = new ArrayList<>();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        locationText = (TextView) view.findViewById(R.id.location_text);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        mapView = (MapView) view.findViewById(R.id.map_view);
+        baiduMap = mapView.getMap();
+        baiduMap.setMyLocationEnabled(true);
         mLocationClient = new LocationClient(getContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         //SDKInitializer.initialize(getContext());
@@ -70,7 +84,7 @@ public class MapFragment extends Fragment {
             requestLocation();
         }
 
-        baiduMap.setMyLocationEnabled(true);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +100,62 @@ public class MapFragment extends Fragment {
                 baiduMap.setMyLocationData(locationData);
             }
         });
+        baiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                ++markerCounter;
+                markerList.add(latLng);
+                markOnMap(latLng);
+            }
+        });
+        baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                baiduMap.clear();
+                markerCounter = 0;
+                markerList.clear();
+            }
+
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
+            }
+        });
     }
+
+    private void markOnMap(LatLng latLng) {
+        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp);
+
+            //构建MarkerOption，用于在地图上添加Marker
+
+        OverlayOptions option = new MarkerOptions()
+                .position(latLng)
+                .icon(bitmap);
+        baiduMap.addOverlay(option);
+        if (markerCounter == 2) {
+            baiduMap.clear();
+            markerCounter = 0;
+            LatLngBounds bounds = new LatLngBounds.Builder()
+                    .include(markerList.get(0))
+                    .include(markerList.get(1))
+                    .build();
+
+            //定义Ground显示的图片
+            BitmapDescriptor bdGround = BitmapDescriptorFactory
+                    .fromResource(R.drawable.ic_bound_background);
+
+            //定义Ground覆盖物选项
+            OverlayOptions ooGround = new GroundOverlayOptions()
+                    .positionFromBounds(bounds)
+                    .image(bdGround)
+                    .transparency(0.8f);
+
+            //在地图中添加Ground覆盖物
+            baiduMap.addOverlay(ooGround);
+        }
+
+    }
+
     private void requestLocation() {
         initLocation();
         mLocationClient.start();
@@ -150,11 +219,7 @@ public class MapFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.mapfragment, container, false);
-        locationText = (TextView) view.findViewById(R.id.location_text);
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        mapView = (MapView) view.findViewById(R.id.map_view);
-        baiduMap = mapView.getMap();
+       view = inflater.inflate(R.layout.mapfragment, container, false);
 
         return view;
     }
