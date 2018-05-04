@@ -65,7 +65,7 @@ public class SatelliteFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                queryFromServer(MainActivity.defaultHttpAddress + "/currentSatellite.json");
+                queryFromServer(MainActivity.getDefaultHttpAddress() + "/currentSatellite.json");
             }
         });
          }
@@ -93,7 +93,7 @@ public class SatelliteFragment extends Fragment {
             adapter.notifyDataSetChanged();
             refreshLayout.setRefreshing(false);
         } else {
-            queryFromServer (MainActivity.defaultHttpAddress + "/currentSatellite.json");
+            queryFromServer (MainActivity.getDefaultHttpAddress() + "/currentSatellite.json");
         }
     }
     private void queryFromServer (String address) {

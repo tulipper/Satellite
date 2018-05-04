@@ -16,7 +16,8 @@ import com.example.satellite.fragment.SatelliteFragment;
 import com.example.satellite.fragment.UserFragment;
 
 public class MainActivity extends BaseActivity {
-    public static String defaultHttpAddress = "http://192.168.1.115";
+    private static String defaultHttpAddress = "http://192.168.1.115";
+    private static String defaultTime = "5"; //(minutes)
     Button satelliteButton;
     Button mapButton;
     Button goalButton;
@@ -119,4 +120,19 @@ public class MainActivity extends BaseActivity {
         userButton.setBackgroundResource(R.drawable.ic_account_box_white_36dp);
     }
 
+    public static String getDefaultTime() {
+        return defaultTime;
+    }
+
+    public static void setDefaultTime(String defaultTime) {
+        MainActivity.defaultTime = defaultTime;
+    }
+
+    public static String getDefaultHttpAddress() {
+        return defaultHttpAddress;
+    }
+
+    public static void setDefaultHttpAddress(String defaultHttpAddress) {
+        MainActivity.defaultHttpAddress = defaultHttpAddress;
+    }
 }

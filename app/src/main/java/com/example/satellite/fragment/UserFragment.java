@@ -31,6 +31,8 @@ import cn.bmob.v3.BmobUser;
 public class UserFragment extends Fragment {
     MyUser currentUser;
     Button logoutButton;
+    Button settingButton;
+    private View view;
     private TextView nickNameText;
     private TextView emailText;
     private TextView phoneText;
@@ -41,7 +43,22 @@ public class UserFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.user_fragment, container, false);
+        view = inflater.inflate(R.layout.user_fragment, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initView();
+        showUserInfo();
+
+    }
+
+    private void initView() {
+        currentUser = BmobUser.getCurrentUser(MyUser.class);
+        settingButton = (Button) view.findViewById(R.id.setting);
         logoutButton = (Button)view.findViewById(R.id.logout);
         nickNameText = (TextView) view.findViewById(R.id.nick_name);
         emailText = (TextView) view.findViewById(R.id.email);
@@ -50,14 +67,6 @@ public class UserFragment extends Fragment {
         nickNameItem = (RelativeLayout) view.findViewById(R.id.nick_name_item);
         emailItem = (RelativeLayout) view.findViewById(R.id.email_item);
         phoneItem = (RelativeLayout) view.findViewById(R.id.phone_item);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        currentUser = BmobUser.getCurrentUser(MyUser.class);
-        showUserInfo();
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +107,16 @@ public class UserFragment extends Fragment {
                     return;
                 }
                 replaceFragmentToStack(new VerifyPhoneFragment());
+            }
+        });
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    Toast.makeText(getContext(), "当前未登录，请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                replaceFragmentToStack(new SettingFragment());
             }
         });
     }

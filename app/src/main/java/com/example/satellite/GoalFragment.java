@@ -44,6 +44,7 @@ public class GoalFragment extends Fragment {
     private RelativeLayout buttonLayout;
     private Button seePicButton;
     private Button seeVideoButton;
+    private Request mapRequest;
 
     @Nullable
     @Override
@@ -69,8 +70,9 @@ public class GoalFragment extends Fragment {
         buttonLayout = (RelativeLayout) view.findViewById(R.id.button_layout);
         seePicButton = (Button) view.findViewById(R.id.see_pic);
         seeVideoButton = (Button) view.findViewById(R.id.see_video);
-        if (((MainActivity)getActivity()).requestFromMap != null)
-            cityEdit.setText(((MainActivity)getActivity()).requestFromMap.getLocation());
+        mapRequest = ((MainActivity)getActivity()).requestFromMap;
+        if (mapRequest != null)
+            cityEdit.setText(mapRequest.getLocation());
         seeVideoButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -124,6 +126,8 @@ public class GoalFragment extends Fragment {
                 progressText.setText("正在检察观测区域的信息...\n");
                 BmobQuery<Message> query = new BmobQuery<>();
                 query.addWhereEqualTo("location", city);
+                if (mapRequest != null)
+                    query.addWhereEqualTo("location", "其他");
                 query.setLimit(1);
                 query.findObjects(new FindListener<Message>() {
                     @Override
@@ -139,8 +143,13 @@ public class GoalFragment extends Fragment {
                             request.setMessage(message);
                             Toast.makeText(MyApplication.getContext(), "success!", Toast.LENGTH_SHORT).show();
                             request.setUser(currentUser);
-                            request.setLocation(city);
                             request.setTime(time);
+                            if (mapRequest != null) {
+                                request.setLocation(mapRequest.getLocation());
+                                request.setLatitude(mapRequest.getLatitude());
+                                request.setLongitude(mapRequest.getLongitude());
+                                request.setRadius(mapRequest.getRadius());
+                            }
                             progressText.append("正在向服务器发送请求信息...\n");
                             request.save(new SaveListener<String>() {
                                 @Override
@@ -188,8 +197,9 @@ public class GoalFragment extends Fragment {
         if (hidden) {
 
         } else {
+            mapRequest = ((MainActivity)getActivity()).requestFromMap;
             if (cityEdit != null)
-                cityEdit.setText(((MainActivity) getActivity()).requestFromMap == null ? "" : ((MainActivity) getActivity()).requestFromMap.getLocation());
+                cityEdit.setText(mapRequest == null ? "" : mapRequest.getLocation());
         }
     }
 }
