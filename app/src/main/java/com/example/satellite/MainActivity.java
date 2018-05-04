@@ -26,6 +26,7 @@ public class MainActivity extends BaseActivity {
     private SatelliteFragment satelliteFragment;
     private MapFragment mapFragment;
     private UserFragment userFragment;
+    public Request requestFromMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

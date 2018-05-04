@@ -2,6 +2,8 @@ package com.example.satellite.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,9 +11,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.GroundOverlayOptions;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -35,7 +40,18 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 
 import com.baidu.mapapi.model.LatLngBounds;
+//import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.utils.DistanceUtil;
+import com.example.satellite.MainActivity;
+import com.example.satellite.MyApplication;
 import com.example.satellite.R;
+import com.example.satellite.Request;
 
 import java.util.ArrayList;
 
@@ -57,6 +73,7 @@ public class MapFragment extends Fragment {
     private View view;
     private int markerCounter = 0;
     private List<LatLng> markerList = new ArrayList<>();
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -114,6 +131,7 @@ public class MapFragment extends Fragment {
                 baiduMap.clear();
                 markerCounter = 0;
                 markerList.clear();
+                ((MainActivity)getActivity()).requestFromMap = null;
             }
 
             @Override
@@ -121,6 +139,9 @@ public class MapFragment extends Fragment {
                 return false;
             }
         });
+
+
+
     }
 
     private void markOnMap(LatLng latLng) {
@@ -152,6 +173,88 @@ public class MapFragment extends Fragment {
 
             //在地图中添加Ground覆盖物
             baiduMap.addOverlay(ooGround);
+
+            //添加信息窗
+            final Button button = new Button(MyApplication.getContext());
+            button.setBackgroundResource(R.drawable.ic_chat_bubble_outline_black_36dp);
+            button.setTextColor(Color.BLACK);
+            final LatLng pt = new LatLng((markerList.get(1).latitude + markerList.get(0).latitude)/2, (markerList.get(1).longitude + markerList.get(0).longitude)/2);
+            //parseLocation(pt);
+            final int radius = (int) DistanceUtil. getDistance(markerList.get(0), markerList.get(1))/2;
+
+            GeoCoder mSearch = GeoCoder.newInstance();
+
+            OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
+
+                public void onGetGeoCodeResult(GeoCodeResult result) {
+
+                    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                        //没有检索到结果
+                    }
+
+                    //获取地理编码结果
+                }
+
+                @Override
+
+                public void onGetReverseGeoCodeResult(final ReverseGeoCodeResult result) {
+
+                    if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                        Toast.makeText(getContext(), "查询失败", Toast.LENGTH_SHORT).show();
+                        //没有找到检索结果
+                        button.setEnabled(false);
+                        return;
+                    }
+                    button.setEnabled(true);
+                    Toast.makeText(getContext(), "查询成功", Toast.LENGTH_SHORT).show();
+
+                    button.setText(result.getAddress().toString());
+                    Log.d(TAG, "onGetReverseGeoCodeResult: "    + result.getAddress().toString());
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Toast.makeText(getContext(), "观测中心：" + result.getAddress().toString() + "附近\n"
+                                    + "范围半径：" + radius + "m", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    //获取反向地理编码结果
+                    ((MainActivity)getActivity()).requestFromMap = new Request();
+                    ((MainActivity)getActivity()).requestFromMap.setLocation(result.getAddress().toString());
+                    ((MainActivity)getActivity()).requestFromMap.setLatitude(pt.latitude);
+                    ((MainActivity)getActivity()).requestFromMap.setLongitude(pt.longitude);
+                    ((MainActivity)getActivity()).requestFromMap.setRadius(radius);
+                }
+            };
+            mSearch.setOnGetGeoCodeResultListener(listener);
+            mSearch.reverseGeoCode(new ReverseGeoCodeOption()
+                    .location(pt));
+
+
+
+
+
+
+
+
+
+
+
+          /*  if (mResult != null) {
+                Log.d(TAG, "markOnMap: " + mResult.getAddress().toString());
+                button.setText(mResult.getAddress().toString());
+            }*/
+
+
+            //定义用于显示该InfoWindow的坐标点
+
+
+            //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
+            InfoWindow mInfoWindow = new InfoWindow(button, pt, 0);
+
+            //显示InfoWindow
+            baiduMap.showInfoWindow(mInfoWindow);
+            mSearch.destroy();
         }
 
     }
@@ -241,5 +344,14 @@ public class MapFragment extends Fragment {
 
         }
     }
+    private void parseLocation(LatLng pt) {
+
+
+
+       // mSearch.destroy();
+
+    }
+
+    private static final String TAG = "MapFragment";
 
 }

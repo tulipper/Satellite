@@ -69,6 +69,8 @@ public class GoalFragment extends Fragment {
         buttonLayout = (RelativeLayout) view.findViewById(R.id.button_layout);
         seePicButton = (Button) view.findViewById(R.id.see_pic);
         seeVideoButton = (Button) view.findViewById(R.id.see_video);
+        if (((MainActivity)getActivity()).requestFromMap != null)
+            cityEdit.setText(((MainActivity)getActivity()).requestFromMap.getLocation());
         seeVideoButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -180,12 +182,14 @@ public class GoalFragment extends Fragment {
 
     }
 
-    private void showProgress(String RequestId) {
-        inputLayout.setVisibility(View.GONE);
-        progressLayout.setVisibility(View.VISIBLE);
-        progressText.setText("成功发送请求\n");
-        progressText.append("正在获取目标区域的信息...\n");
-        Request request = new Request();
-        //request.setMessage();
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+
+        } else {
+            if (cityEdit != null)
+                cityEdit.setText(((MainActivity) getActivity()).requestFromMap == null ? "" : ((MainActivity) getActivity()).requestFromMap.getLocation());
+        }
     }
 }

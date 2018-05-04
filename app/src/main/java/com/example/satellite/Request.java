@@ -1,5 +1,7 @@
 package com.example.satellite;
 
+import android.content.Intent;
+
 import cn.bmob.v3.BmobObject;
 
 /**
@@ -8,18 +10,27 @@ import cn.bmob.v3.BmobObject;
 
 public class Request extends BmobObject {
     private String location;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
     private String time;
     private MyUser user;
     private String progress;
     private Message message;
+    private Integer radius;
 
-    public String getLatitude() {
+    public Integer getRadius() {
+        return radius;
+    }
+
+    public void setRadius(Integer radius) {
+        this.radius = radius;
+    }
+
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
@@ -31,11 +42,11 @@ public class Request extends BmobObject {
         this.location = location;
     }
 
-    public String getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
