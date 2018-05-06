@@ -16,12 +16,25 @@ import com.example.satellite.fragment.SatelliteFragment;
 import com.example.satellite.fragment.UserFragment;
 
 public class MainActivity extends BaseActivity {
+    //userSettint
+    private static boolean useDefault = true;
     private static String defaultHttpAddress = "http://192.168.1.115";
     private static String defaultTime = "5"; //(minutes)
+    //Buttons
+
+    public static boolean isUseDefault() {
+        return useDefault;
+    }
+
+    public static void setUseDefault(boolean useDefault) {
+        MainActivity.useDefault = useDefault;
+    }
+
     Button satelliteButton;
     Button mapButton;
     Button goalButton;
     Button userButton;
+    //Fragments
     private Fragment currentFragment;
     private GoalFragment goalFragment;
     private SatelliteFragment satelliteFragment;
