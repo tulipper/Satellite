@@ -114,7 +114,7 @@ public class GoalFragment extends Fragment {
                 }
                 city =  cityEdit.getText().toString();
                 time = timeEdit.getText().toString();
-                time = TextUtils.isEmpty(time)? "5" : time;
+                time = TextUtils.isEmpty(time)? MainActivity.getDefaultTime()  : time;
                 if (TextUtils.isEmpty(city)) {
                     Toast.makeText(MyApplication.getContext(), "请输入观测城市", Toast.LENGTH_SHORT).show();
                     return;

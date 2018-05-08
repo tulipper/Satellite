@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/compare"
+        android:icon="@drawable/ic_equalizer_black_36dp"
+        android:title="对比"
+        app:showAsAction= "never"/>
+    <item
+        android:id="@+id/history"
+        android:icon="@drawable/ic_replay_black_36dp"
+        android:title="历史图像"
+        app:showAsAction= "never" />
+    <item
+        android:id="@+id/current"
+        android:icon="@drawable/ic_av_timer_black_36dp"
+        android:title="实时图像"
+        app:showAsAction= "never"/>
+
+</menu>

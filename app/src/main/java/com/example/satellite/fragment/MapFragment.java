@@ -47,6 +47,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.example.satellite.MainActivity;
 import com.example.satellite.MyApplication;
@@ -70,8 +71,10 @@ public class MapFragment extends Fragment {
     private FloatingActionButton fab;
     private double latitude;
     private double longitude;
+    private LatLng latlng;
     private View view;
     private int markerCounter = 0;
+    private boolean isFirstGetLocation = true;
     private List<LatLng> markerList = new ArrayList<>();
 
 
@@ -105,16 +108,10 @@ public class MapFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //移动到我的位置
-                LatLng ll = new LatLng(latitude, longitude);
-                MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
-                baiduMap.animateMapStatus(update);
-                //让我显示在地图上
-                MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
-                locationBuilder.latitude(latitude);
-                locationBuilder.longitude(longitude);
-                MyLocationData locationData = locationBuilder.build();
-                baiduMap.setMyLocationData(locationData);
+                // 将google地图、soso地图、aliyun地图、mapabc地图和amap地图// 所用坐标转换成百度坐标
+
+                onFabClicked();
+
             }
         });
         baiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
@@ -141,6 +138,37 @@ public class MapFragment extends Fragment {
         });
 
 
+
+    }
+
+    private void onFabClicked() {
+        CoordinateConverter converter  = new CoordinateConverter();
+        converter.from(CoordinateConverter.CoordType.COMMON);
+
+        // sourceLatLng待转换坐标
+
+        converter.coord(latlng);
+        LatLng desLatLng = converter.convert();
+
+                /*// 将GPS设备采集的原始GPS坐标转换成百度坐标
+
+                CoordinateConverter converter  = new CoordinateConverter();
+                converter.from(CoordinateConverter.CoordType.GPS);
+
+                // sourceLatLng待转换坐标
+
+                converter.coord(sourceLatLng);
+                LatLng desLatLng = converter.convert();*/
+        //移动到我的位置
+        //LatLng ll = new LatLng(latitude, longitude);
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(desLatLng);
+        baiduMap.animateMapStatus(update);
+        //让我显示在地图上
+        MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
+        locationBuilder.latitude(desLatLng.latitude);
+        locationBuilder.longitude(desLatLng.longitude);
+        MyLocationData locationData = locationBuilder.build();
+        baiduMap.setMyLocationData(locationData);
 
     }
 
@@ -266,6 +294,7 @@ public class MapFragment extends Fragment {
     private void initLocation() {
         LocationClientOption option = new LocationClientOption();
         option.setScanSpan(5000);
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         mLocationClient.setLocOption(option);
     }
 
@@ -334,10 +363,15 @@ public class MapFragment extends Fragment {
                 fab.setVisibility(View.VISIBLE);
                 latitude = bdLocation.getLatitude();
                 longitude = bdLocation.getLongitude();
+                latlng = new LatLng(latitude, longitude);
                 StringBuilder currentPosition = new StringBuilder();
                 currentPosition.append("纬度：").append(bdLocation.getLatitude()).append("；\n");
                 currentPosition.append("经度：").append(bdLocation.getLongitude()).append("；");
                 locationText.setText(currentPosition.toString());
+                if (isFirstGetLocation) {
+                    onFabClicked();
+                    isFirstGetLocation = false;
+                }
             } else {
                 //fab.setVisibility(View.GONE);
             }

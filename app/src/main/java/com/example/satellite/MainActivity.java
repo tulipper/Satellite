@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity {
         satelliteFragment = new SatelliteFragment();
         mapFragment = new MapFragment();
         userFragment = new UserFragment();
-        currentFragment = satelliteFragment;
+        currentFragment = mapFragment;
         initShow();
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +113,9 @@ public class MainActivity extends BaseActivity {
         currentFragment = targetFragment;
     }
     private void initShow() {
+        satelliteButton.setVisibility(View.GONE);
         initButtonBackground();
-        satelliteButton.setBackgroundResource(R.drawable.ic_flight_black_36dp);
+        mapButton.setBackgroundResource(R.drawable.ic_map_black_36dp);
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         transaction
