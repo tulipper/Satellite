@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class ModifyEmailFragment extends Fragment {
     private EditText inputEmail;
     private View view;
     private TextView titleText;
+    //private LinearLayout buttonLayout;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +42,8 @@ public class ModifyEmailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        //buttonLayout = (LinearLayout) view.findViewById(R.id.main_button_layout);
+        //buttonLayout.setVisibility(View.GONE);
         backImage = (ImageView) view.findViewById(R.id.back_image);
         doneImage = (ImageView) view.findViewById(R.id.done_image);
         inputEmail = (EditText) view.findViewById(R.id.nick_name);

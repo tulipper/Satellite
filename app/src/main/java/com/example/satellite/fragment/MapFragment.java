@@ -150,15 +150,7 @@ public class MapFragment extends Fragment {
         converter.coord(latlng);
         LatLng desLatLng = converter.convert();
 
-                /*// 将GPS设备采集的原始GPS坐标转换成百度坐标
 
-                CoordinateConverter converter  = new CoordinateConverter();
-                converter.from(CoordinateConverter.CoordType.GPS);
-
-                // sourceLatLng待转换坐标
-
-                converter.coord(sourceLatLng);
-                LatLng desLatLng = converter.convert();*/
         //移动到我的位置
         //LatLng ll = new LatLng(latitude, longitude);
         MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(desLatLng);

@@ -197,6 +197,7 @@ public class GoalFragment extends Fragment {
         if (hidden) {
 
         } else {
+
             mapRequest = ((MainActivity)getActivity()).requestFromMap;
             if (cityEdit != null)
                 cityEdit.setText(mapRequest == null ? "" : mapRequest.getLocation());

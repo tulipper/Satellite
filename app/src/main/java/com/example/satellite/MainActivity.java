@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,13 +36,13 @@ public class MainActivity extends BaseActivity {
     Button goalButton;
     Button userButton;
     //Fragments
-    private Fragment currentFragment;
+    public Fragment currentFragment;
     private GoalFragment goalFragment;
     private SatelliteFragment satelliteFragment;
     private MapFragment mapFragment;
     private UserFragment userFragment;
     public Request requestFromMap;
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,9 @@ public class MainActivity extends BaseActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(currentFragment instanceof MapFragment || currentFragment instanceof SatelliteFragment
+                        || currentFragment instanceof GoalFragment || currentFragment instanceof UserFragment))
+                    onBackPressed();
                 initButtonBackground();
                 mapButton.setBackgroundResource(R.drawable.ic_map_black_36dp);
                 switchFragment(mapFragment);
@@ -68,6 +72,9 @@ public class MainActivity extends BaseActivity {
         satelliteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(currentFragment instanceof MapFragment || currentFragment instanceof SatelliteFragment
+                        || currentFragment instanceof GoalFragment || currentFragment instanceof UserFragment))
+                    onBackPressed();
                 initButtonBackground();
                 satelliteButton.setBackgroundResource(R.drawable.ic_flight_black_36dp);
                 switchFragment(satelliteFragment);
@@ -76,14 +83,21 @@ public class MainActivity extends BaseActivity {
         userButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(currentFragment instanceof MapFragment || currentFragment instanceof SatelliteFragment
+                        || currentFragment instanceof GoalFragment || currentFragment instanceof UserFragment))
+                    onBackPressed();
                 initButtonBackground();
                 userButton.setBackgroundResource(R.drawable.ic_account_box_black_36dp);
                 switchFragment(userFragment);
+
             }
         });
         goalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(currentFragment instanceof MapFragment || currentFragment instanceof SatelliteFragment
+                        || currentFragment instanceof GoalFragment || currentFragment instanceof UserFragment))
+                    onBackPressed();
                 initButtonBackground();
                 goalButton.setBackgroundResource(R.drawable.ic_my_location_black_36dp);
                 switchFragment(goalFragment);
@@ -111,9 +125,10 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, "添加过了", Toast.LENGTH_SHORT).show();
         }
         currentFragment = targetFragment;
+        Log.d(TAG, "currentFragment" + currentFragment.toString());
     }
     private void initShow() {
-        satelliteButton.setVisibility(View.GONE);
+        //satelliteButton.setVisibility(View.GONE);
         initButtonBackground();
         mapButton.setBackgroundResource(R.drawable.ic_map_black_36dp);
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -121,6 +136,7 @@ public class MainActivity extends BaseActivity {
         transaction
                 .add(R.id.frag_container, currentFragment)
                 .commit();
+        Log.d(TAG, "currentFragment" + currentFragment.toString());
     }
 
 

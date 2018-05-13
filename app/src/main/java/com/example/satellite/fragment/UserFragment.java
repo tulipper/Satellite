@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class UserFragment extends Fragment {
     private RelativeLayout nickNameItem;
     private RelativeLayout emailItem;
     private RelativeLayout phoneItem;
+    private static final String TAG = "MainActivity";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -134,5 +136,25 @@ public class UserFragment extends Fragment {
         transaction.replace(R.id.frag_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        ((MainActivity) getActivity()).currentFragment = fragment;
+        Log.d(TAG, "replaceFragmentToStack: " + ((MainActivity) getActivity()).currentFragment);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).currentFragment = this;
+        Log.d(TAG, "onResume: " + ((MainActivity) getActivity()).currentFragment.toString());
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+
+        } else {
+            ((MainActivity) getActivity()).currentFragment = this;
+            Log.d(TAG, "onHiddenChanged: " + ((MainActivity) getActivity()).currentFragment.toString());
+        }
     }
 }
