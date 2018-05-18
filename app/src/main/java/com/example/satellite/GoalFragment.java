@@ -78,7 +78,9 @@ public class GoalFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (message != null) {
-                    String url = message.getVideoAddr();
+                    String url = message.getVideoAddr().startsWith("/") ?
+                            MainActivity.getDefaultHttpAddress()+message.getVideoAddr() :
+                            message.getVideoAddr();
                     String city = message.getLocation();
                     Intent intent = new Intent(getContext(), LiveActivity.class);
                     intent.putExtra("url", url);
@@ -93,7 +95,7 @@ public class GoalFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (message != null) {
-                    String url = message.getPicAddr();
+                    String url = MainActivity.getDefaultHttpAddress() + message.getPicAddr();
                     String city = message.getLocation();
                     int maxLeval = 9;
                     Intent intent  = new Intent (getActivity(), PicActivity.class);

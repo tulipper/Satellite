@@ -16,6 +16,16 @@ import com.example.satellite.fragment.MapFragment;
 import com.example.satellite.fragment.SatelliteFragment;
 import com.example.satellite.fragment.UserFragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+
 public class MainActivity extends BaseActivity {
     //userSettint
     private static boolean useDefault = true;
@@ -47,6 +57,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initMap();
+        initServerAddress();
         setContentView(R.layout.activity_main);
         satelliteButton = (Button)findViewById(R.id.satellite);
         mapButton = (Button) findViewById(R.id.map);
@@ -104,6 +115,42 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void initServerAddress() {
+        BmobQuery<IPAddress> query = new BmobQuery<IPAddress>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String today = sdf.format(new Date());
+        Log.d(TAG, "initServerAddress: todya" + today);
+        //String today = "2015-05-01 00:00:00";
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date  = null;
+        try {
+            date = sdf.parse(today);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        query.addWhereLessThanOrEqualTo("createdAt",new BmobDate(date));
+        query.setLimit(1);
+        query.order("-updatedAt");
+        query.findObjects(new FindListener<IPAddress>() {
+            @Override
+            public void done(List<IPAddress> object, BmobException e) {
+                if(e == null){
+                    IPAddress lastIp = object.get(0);
+                    Log.d(TAG, "Id" + lastIp.getObjectId());
+                    Log.d(TAG, "ipaddress" + lastIp.getIpaddress());
+                    Log.d(TAG, "CreatedAt"+lastIp.getCreatedAt());
+                    //object.size()
+                    Log.d(TAG, "done: " + object.get(0).getIpaddress());
+                    MainActivity.setDefaultHttpAddress("http://" + object.get(0).getIpaddress());
+                    Toast.makeText(MainActivity.this, "服务器地址初始化成功", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(MainActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
