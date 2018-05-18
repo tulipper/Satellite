@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class GoalFragment extends Fragment {
     private Button seePicButton;
     private Button seeVideoButton;
     private Request mapRequest;
+    private static final String TAG = "GoalFragment";
 
     @Nullable
     @Override
@@ -195,14 +197,15 @@ public class GoalFragment extends Fragment {
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+        //super.onHiddenChanged(hidden);
         if (hidden) {
-
+            Log.d(TAG, "onHiddenChanged: "  +"  GoalFragment Hide" );
         } else {
-
+            //((MainActivity)getActivity()).onGoalButtonPressed();
             mapRequest = ((MainActivity)getActivity()).requestFromMap;
             if (cityEdit != null)
                 cityEdit.setText(mapRequest == null ? "" : mapRequest.getLocation());
         }
+        super.onHiddenChanged(hidden);
     }
 }

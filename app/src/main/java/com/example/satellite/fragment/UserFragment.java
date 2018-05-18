@@ -143,7 +143,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).currentFragment = this;
+        //((MainActivity) getActivity()).currentFragment = this;
         Log.d(TAG, "onResume: " + ((MainActivity) getActivity()).currentFragment.toString());
     }
 

@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity {
         });
 
     }
-
+    
     private void initServerAddress() {
         BmobQuery<IPAddress> query = new BmobQuery<IPAddress>();
 
