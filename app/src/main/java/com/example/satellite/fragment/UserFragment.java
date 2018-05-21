@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.satellite.ActivityCollector;
+import com.example.satellite.GoalFragment;
 import com.example.satellite.LoginActivity;
 import com.example.satellite.MainActivity;
 import com.example.satellite.MyUser;
@@ -143,7 +144,10 @@ public class UserFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //((MainActivity) getActivity()).currentFragment = this;
+        ((MainActivity) getActivity()).currentFragment = this;
+        if (!this.isAdded()) {
+            ((MainActivity) getActivity()).currentFragments.add(this);
+        }
         Log.d(TAG, "onResume: " + ((MainActivity) getActivity()).currentFragment.toString());
     }
 
@@ -151,10 +155,10 @@ public class UserFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden) {
-
+            Log.d(TAG, "onHiddenChanged: UserFragment" + " hidden");
         } else {
-            ((MainActivity) getActivity()).currentFragment = this;
-            Log.d(TAG, "onHiddenChanged: " + ((MainActivity) getActivity()).currentFragment.toString());
+            //((MainActivity) getActivity()).currentFragment = this;
+            Log.d(TAG, "onHiddenChanged: " + "UserFragment unHidden");
         }
     }
 }

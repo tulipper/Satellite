@@ -46,7 +46,7 @@ public class GoalFragment extends Fragment {
     private Button seePicButton;
     private Button seeVideoButton;
     private Request mapRequest;
-    private static final String TAG = "GoalFragment";
+    private static final String TAG = "MainActivity";
 
     @Nullable
     @Override
@@ -207,5 +207,12 @@ public class GoalFragment extends Fragment {
                 cityEdit.setText(mapRequest == null ? "" : mapRequest.getLocation());
         }
         super.onHiddenChanged(hidden);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).currentFragment = this;
+
+        Log.d(TAG, "onResume: " + ((MainActivity) getActivity()).currentFragment.toString());
     }
 }

@@ -300,6 +300,8 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        if (latlng != null)
+            onFabClicked();
     }
 
     @Override

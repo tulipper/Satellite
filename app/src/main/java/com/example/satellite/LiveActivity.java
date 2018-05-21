@@ -9,13 +9,13 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
+import android.widget.Toast;
 
 
 import java.text.SimpleDateFormat;
@@ -40,6 +40,7 @@ public class LiveActivity extends BaseActivity {
     private static final int RETRY_TIMES = 5;
     private static final int AUTO_HIDE_TIME = 5000;//ms
     private int counter = 0;
+    private static final String TAG = "LiveActivity";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -52,6 +53,7 @@ public class LiveActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_live);
+
         initView();
         initPlayer();
 
@@ -61,14 +63,33 @@ public class LiveActivity extends BaseActivity {
         Vitamio.isInitialized(getApplicationContext());
         playImage = (ImageView) findViewById(R.id.playImage);
         playImage.setOnClickListener(new View.OnClickListener() {
+            long currentPosition = 0;
+            long totalTime = 0;
             @Override
             public void onClick(View v) {
+
                 if (liveVideo.isPlaying()) {
-                    liveVideo.stopPlayback();
+                    totalTime = liveVideo.getDuration();
+                    currentPosition = liveVideo.getCurrentPosition();
+                    Log.d(TAG, "onClick: when playing " + currentPosition);
+                    if (totalTime == 0) {
+                        liveVideo.stopPlayback();
+                    } else {
+                        liveVideo.pause();
+                    }
+                    //liveVideo.stopPlayback();
                     playImage.setImageResource(R.drawable.ic_play_arrow_white_36dp);
                 } else {
+                    Log.d(TAG, "onClick: when other" + currentPosition);
                     playImage.setImageResource(R.drawable.ic_pause_circle_outline_white_36dp);
-                    liveVideo.setVideoURI(Uri.parse(liveUrl));
+                    //liveVideo.setVideoURI(Uri.parse(liveUrl));
+                    if (totalTime == 0) {
+                        liveVideo.setVideoURI(Uri.parse(liveUrl));
+                    } else {
+                        liveVideo.seekTo(currentPosition);
+                    }
+                    liveVideo.start();
+                    //liveVideo.resume();
                     /*
                     liveVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
@@ -87,6 +108,10 @@ public class LiveActivity extends BaseActivity {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 liveVideo.start();
+                long time = mp.getDuration();
+                time /= 1000;
+                // Toast.makeText(LiveActivity.this, time/3600 + "h" + time%3600/60 + "S", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPrepared: total time  " + time/3600 + "h" + time%3600/60 + "m" + time%3600%60 + "s");
             }
         });
         liveVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -122,6 +147,8 @@ public class LiveActivity extends BaseActivity {
                     case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
                     case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
                         loadingLayout.setVisibility(View.GONE);
+                        break;
+
                 }
                 return false;
             }

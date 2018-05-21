@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class SatelliteFragment extends Fragment {
     private SatelliteAdapter adapter;
     private  List<Satellite> dataList = new ArrayList<>();
     private SwipeRefreshLayout refreshLayout;
+    private static final String TAG = "MainActivity";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -124,5 +126,12 @@ public class SatelliteFragment extends Fragment {
             }
         });
     }
+    /*@Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).currentFragment = this;
+
+        Log.d(TAG, "onResume: " + ((MainActivity) getActivity()).currentFragment.toString());
+    }*/
 
 }

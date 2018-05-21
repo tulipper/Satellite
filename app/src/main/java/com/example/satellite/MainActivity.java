@@ -1,6 +1,8 @@
 package com.example.satellite;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +20,7 @@ import com.example.satellite.fragment.UserFragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +48,9 @@ public class MainActivity extends BaseActivity {
     Button mapButton;
     Button goalButton;
     Button userButton;
+
     //Fragments
+    public List<Fragment> currentFragments;
     public Fragment currentFragment;
     private GoalFragment goalFragment;
     private SatelliteFragment satelliteFragment;
@@ -59,6 +64,7 @@ public class MainActivity extends BaseActivity {
         initMap();
         initServerAddress();
         setContentView(R.layout.activity_main);
+        currentFragments = new ArrayList<>();
         satelliteButton = (Button)findViewById(R.id.satellite);
         mapButton = (Button) findViewById(R.id.map);
         goalButton = (Button) findViewById(R.id.goal);
@@ -67,7 +73,7 @@ public class MainActivity extends BaseActivity {
         satelliteFragment = new SatelliteFragment();
         mapFragment = new MapFragment();
         userFragment = new UserFragment();
-        currentFragment = mapFragment;
+        currentFragment = userFragment;
         initShow();
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +122,7 @@ public class MainActivity extends BaseActivity {
         });
 
     }
-    
+
     private void initServerAddress() {
         BmobQuery<IPAddress> query = new BmobQuery<IPAddress>();
 
@@ -158,14 +164,18 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         if (!targetFragment.isAdded()) {
+            currentFragments.add(targetFragment);
             transaction
                     .hide(currentFragment)
+                    .hide(satelliteFragment)
                     .add(R.id.frag_container, targetFragment)
                     .commit();
             Toast.makeText(this, "还没有添加过", Toast.LENGTH_SHORT).show();
         } else {
             transaction
                     .hide(currentFragment)
+                    .hide(userFragment)
+                    .hide(satelliteFragment)
                     .show(targetFragment)
                     .commit();
             //System.out.println("添加了( ⊙o⊙ )哇");
@@ -176,11 +186,14 @@ public class MainActivity extends BaseActivity {
     }
     private void initShow() {
         //satelliteButton.setVisibility(View.GONE);
+        currentFragments.add(currentFragment);
         initButtonBackground();
-        mapButton.setBackgroundResource(R.drawable.ic_map_black_36dp);
+        userButton.setBackgroundResource(R.drawable.ic_account_box_black_36dp);
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         transaction
+                .add(R.id.frag_container, satelliteFragment)
+                .hide(satelliteFragment)
                 .add(R.id.frag_container, currentFragment)
                 .commit();
         Log.d(TAG, "currentFragment" + currentFragment.toString());
@@ -211,5 +224,11 @@ public class MainActivity extends BaseActivity {
 
     public static void setDefaultHttpAddress(String defaultHttpAddress) {
         MainActivity.defaultHttpAddress = defaultHttpAddress;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Log.d(TAG, "onResume: MainActivity");
     }
 }

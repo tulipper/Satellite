@@ -43,6 +43,7 @@ public class PicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic);
+
         Intent intent = getIntent();
         rootUrl = intent.getStringExtra("url");
         title = intent.getStringExtra("city");
